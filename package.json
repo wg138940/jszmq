@@ -25,7 +25,7 @@
   "homepage": "https://github.com/zeromq/jszmq#readme",
   "dependencies": {
     "@types/events": "^3.0.0",
-    "@types/lodash": "^4.14.158",
+    "@types/lodash": "^4.14.197",
     "@types/node": "^14.0.26",
     "@types/setasap": "^2.0.0",
     "@types/ws": "^7.2.6",
@@ -33,16 +33,15 @@
     "buffer": "^5.6.0",
     "events": "^3.2.0",
     "isomorphic-ws": "^4.0.1",
-    "lodash": "^4.17.19",
     "setasap": "^2.0.1",
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "@types/jasmine": "^3.5.11",
-    "jasmine": "^3.6.1",
+    "@types/jasmine": "^4.3.5",
+    "jasmine": "^5.1.0",
     "jasmine-console-reporter": "^3.1.0",
     "nyc": "^15.1.0",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
