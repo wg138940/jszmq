@@ -1,5 +1,5 @@
 import { server as WebSocketServer, connection as WebSocket, request as WebSocketRequest } from 'websocket'
-import {URL} from 'url'
+import * as url from 'url'
 import {toNumber} from 'lodash-es'
 import { EventEmitter } from 'events'
 import SocketOptions from './socketOptions.js'
@@ -53,18 +53,25 @@ export default class WebSocketListener extends EventEmitter implements IListener
         super()
         this.onConnection = this.onConnection.bind(this)
 
-        const url = new URL(address)
+        // TODO: nolint @deprecated
+        const addrUrl = url.parse(address)
 
         let port
 
-        if (url.port)
-            port = toNumber(url.port)
-        else if (url.protocol === 'wss')
+        if (addrUrl.port)
+            port = toNumber(addrUrl.port)
+        else if (addrUrl.protocol === 'wss')
             port = 443
-        else if (url.protocol == 'ws')
+        else if (addrUrl.protocol == 'ws')
             port = 80
         else
             throw new Error('not a websocket address')
+
+            
+        if (!addrUrl.hostname || !addrUrl.pathname)
+            throw new Error(
+                `invalid hostname ('${addrUrl.hostname}') or pathname ('${addrUrl.pathname}')` +
+                `from url.parse('${this.address}')`)
 
         if (!httpServer) {
             httpServer = http.createServer()
@@ -73,13 +80,13 @@ export default class WebSocketListener extends EventEmitter implements IListener
         
         this.server = new WebSocketServer()
         const listener = getHttpServerListener(httpServer)
-        this.path = url.pathname
-        listener.add(url.pathname, this.server)
+        this.path = addrUrl.pathname!
+        listener.add(addrUrl.pathname!, this.server)
         this.server.on('connect', this.onConnection)
         this.server.mount({ httpServer, autoAcceptConnections: true })
 
         if (this.ownHttpServer) {
-            this.ownHttpServer.listen(port, url.hostname)
+            this.ownHttpServer.listen(port, addrUrl.hostname!)
         }
     }
 
