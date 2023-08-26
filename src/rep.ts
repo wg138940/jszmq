@@ -1,5 +1,5 @@
-import Router from './router'
-import {IEndpoint, Msg} from './types'
+import Router from './router.js'
+import {IEndpoint, Msg} from './types.js'
 import {Buffer} from "buffer"
 import setAsap from 'setasap'
 

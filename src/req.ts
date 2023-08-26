@@ -1,5 +1,5 @@
-import Dealer from './dealer'
-import {IEndpoint, Msg} from './types'
+import Dealer from './dealer.js'
+import {IEndpoint, Msg} from './types.js'
 import {Buffer} from "buffer"
 
 export default class Req extends Dealer {

@@ -1,12 +1,13 @@
 import { server as WebSocketServer, connection as WebSocket, request as WebSocketRequest } from 'websocket'
 import {URL} from 'url'
-import {toNumber} from 'lodash'
+import _ from 'lodash'
+const {toNumber} = _;
 import { EventEmitter } from 'events'
-import SocketOptions from './socketOptions'
-import Endpoint from './webSocketEndpoint'
+import SocketOptions from './socketOptions.js'
+import Endpoint from './webSocketEndpoint.js'
 import * as http from 'http'
 import * as https from 'https'
-import {IListener} from './types'
+import {IListener} from './types.js'
 
 type HttpServer = http.Server | https.Server
 

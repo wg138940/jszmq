@@ -1,7 +1,8 @@
 import {Buffer} from 'buffer'
-import SocketBase from './socketBase'
-import {includes, pull} from 'lodash'
-import {IEndpoint, Msg} from './types'
+import SocketBase from './socketBase.js'
+import _ from 'lodash'
+const {includes, pull} = _;
+import {IEndpoint, Msg} from './types.js'
 
 export default class Router extends SocketBase {
     anonymousPipes: IEndpoint[] = []

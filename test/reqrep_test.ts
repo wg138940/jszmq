@@ -1,9 +1,10 @@
-import * as jsmq from '../src'
+import * as jszmq from '../src/index.js'
+const { Req, Rep } = jszmq;
 
 describe('reqrep', function() {
     it('simple request response', function(done) {
-        const req = new jsmq.Req()
-        const rep = new jsmq.Rep()
+        const req = new Req()
+        const rep = new Rep()
 
         rep.bind('ws://localhost:55556')
         req.connect('ws://localhost:55556')
@@ -22,14 +23,14 @@ describe('reqrep', function() {
     })
     
     it('multiple requests', function (done) {
-        const rep = new jsmq.Rep()
-        const reqs:jsmq.Req[] = []
-        const last = new jsmq.Req()
+        const rep = new Rep()
+        const reqs: jszmq.Req[] = []
+        const last = new Req()
 
         rep.bind('ws://localhost:55556')
 
         for (let i = 0; i < 100; i++) {
-            reqs[i] = new jsmq.Req()
+            reqs[i] = new Req()
             reqs[i].connect('ws://localhost:55556')
         }
         last.connect('ws://localhost:55556')

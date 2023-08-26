@@ -1,9 +1,9 @@
-import * as jsmq from '../src'
+import { XPub, Sub } from '../src/index.js'
 
 describe('pubsub', function() {
     it('subscribe', function(done) {
-        const pub = new jsmq.XPub()
-        const sub = new jsmq.Sub()
+        const pub = new XPub()
+        const sub = new Sub()
 
         pub.bind('ws://localhost:55556')
         sub.subscribe('A')
@@ -24,8 +24,8 @@ describe('pubsub', function() {
     })
 
     it('unsubscribe', function (done) {
-        const pub = new jsmq.XPub()
-        const sub = new jsmq.Sub()
+        const pub = new XPub()
+        const sub = new Sub()
 
         pub.bind('ws://localhost:55556')
         sub.subscribe('A')

@@ -1,8 +1,9 @@
-import * as assert from 'assert'
-import {IEndpoint} from '../types'
+import { assert } from './assert.js'
+import {IEndpoint} from '../types.js'
 import {Buffer} from 'buffer'
-import {isUndefined} from 'lodash'
-import {copy, resize} from './array'
+import _ from 'lodash'
+const {isUndefined} = _
+import {copy, resize} from './array.js'
 
 type RemovedCallback = (endpoint:IEndpoint, buffer:Buffer, bufferSize:number) => void
 type MatchCallback = (endpoint:IEndpoint) => void
@@ -171,7 +172,7 @@ export default class MultiTrie {
             // switch to using the more compact single-node
             // representation
             const node = this.next[newMin - this.minCharacter]
-            assert(node)
+            assert(!!node, '!!node')
             this.next = [ node ]
             this.count = 1
             this.minCharacter = newMin
@@ -193,7 +194,7 @@ export default class MultiTrie {
         if (size === 0) {
             if (this.endpoints) {
                 const erased = this.endpoints.delete(endpoint)
-                assert(erased)
+                assert(erased, 'erased == true')
                 if (this.endpoints.size === 0)
                     this.endpoints = undefined
             }
@@ -211,7 +212,7 @@ export default class MultiTrie {
         let ret = nextNode.remove(prefix, start + 1, size - 1, endpoint)
         if (nextNode.isRedundant)
         {
-            assert(this.count > 0)
+            assert(this.count > 0, 'this.count > 0')
 
             if (this.count === 1) {
                 this.next = []

@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events'
-import SocketOptions from './socketOptions'
-import {find, pull} from 'lodash'
-import {Frame, IEndpoint, IListener, Msg} from './types'
-import WebSocketListener from './webSocketListener'
+import SocketOptions from './socketOptions.js'
+import _ from 'lodash'
+const {find, pull} = _;
+import {Frame, IEndpoint, IListener, Msg} from './types.js'
+import WebSocketListener from './webSocketListener.js'
 import * as http from 'http'
 import * as https from 'https'
-import WebSocketEndpoint from './webSocketEndpoint'
+import WebSocketEndpoint from './webSocketEndpoint.js'
 
 class SocketBase extends EventEmitter {
     private endpoints: IEndpoint[] = []

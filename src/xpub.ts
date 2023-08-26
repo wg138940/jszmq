@@ -1,8 +1,8 @@
 import {Buffer} from 'buffer'
-import SocketBase from './socketBase'
-import {IEndpoint, Msg} from './types'
-import MultiTrie from './utils/multiTrie'
-import Distribution from './utils/distribution'
+import SocketBase from './socketBase.js'
+import {IEndpoint, Msg} from './types.js'
+import MultiTrie from './utils/multiTrie.js'
+import Distribution from './utils/distribution.js'
 
 export default class XPub extends SocketBase {
     subscriptions = new MultiTrie()

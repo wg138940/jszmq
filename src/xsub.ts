@@ -1,8 +1,8 @@
 import {Buffer} from 'buffer'
-import SocketBase from './socketBase'
-import {IEndpoint, Msg} from './types'
-import Trie from './utils/trie'
-import Distribution from './utils/distribution'
+import SocketBase from './socketBase.js'
+import {IEndpoint, Msg} from './types.js'
+import Trie from './utils/trie.js'
+import Distribution from './utils/distribution.js'
 
 export default class XSub extends SocketBase {
     subscriptions: Trie

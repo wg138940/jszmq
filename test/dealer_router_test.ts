@@ -1,10 +1,10 @@
 import 'jasmine'
-import * as jsmq from '../src'
+import { Router, Dealer } from '../src/index.js'
 
 describe('dealer-router', function () {
     it('ping-pong', function (done) {
-        const router = new jsmq.Router()
-        const dealer = new jsmq.Dealer()
+        const router = new Router()
+        const dealer = new Dealer()
         router.bind('ws://localhost:3002/dealer-router')
         dealer.connect('ws://localhost:3002/dealer-router')
 

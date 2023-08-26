@@ -1,7 +1,7 @@
 import {Buffer} from 'buffer'
-import SocketBase from './socketBase'
-import LoadBalancer from './utils/loadBalancer'
-import {IEndpoint, Msg} from './types'
+import SocketBase from './socketBase.js'
+import LoadBalancer from './utils/loadBalancer.js'
+import {IEndpoint, Msg} from './types.js'
 
 export default class Dealer extends SocketBase {
     private loadBalancer = new LoadBalancer()

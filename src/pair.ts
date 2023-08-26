@@ -1,6 +1,6 @@
 import {Buffer} from 'buffer'
-import SocketBase from './socketBase'
-import {IEndpoint, Msg} from './types'
+import SocketBase from './socketBase.js'
+import {IEndpoint, Msg} from './types.js'
 
 export default class Pair extends SocketBase {
     private endpoint?:IEndpoint

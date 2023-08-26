@@ -1,7 +1,8 @@
 import {Buffer} from 'buffer'
-import {isString} from 'lodash'
-import XSub from './xsub'
-import {Frame, Msg} from './types'
+import _ from 'lodash'
+const {isString} = _
+import XSub from './xsub.js'
+import {Frame, Msg} from './types.js'
 
 export default class Sub extends XSub {
     subscribe(topic: Frame) {

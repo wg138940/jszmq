@@ -1,10 +1,11 @@
-import { connection as WebSocket, client as WebSocketClient } from 'websocket'
+import ws from 'websocket'
 import { EventEmitter } from 'events'
 import {Buffer} from 'buffer'
-import SocketOptions from './socketOptions'
-import {isString} from 'lodash'
-import {IEndpoint, Msg} from './types'
-import { WebSocketState } from './webSocketState'
+import SocketOptions from './socketOptions.js'
+import _ from 'lodash'
+const {isString} = _;
+import {IEndpoint, Msg} from './types.js'
+import { WebSocketState } from './webSocketState.js'
 
 enum State {
     Closed,
@@ -14,7 +15,7 @@ enum State {
 }
 
 export default class WebSocketEndpoint extends EventEmitter implements IEndpoint {
-    socket!: WebSocket;
+    socket!: ws.connection;
     state: State
     frames:Buffer[] = []
     queue:Buffer[] = []
@@ -25,7 +26,7 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
     public routingKeyString = ''
     public address:string
 
-    constructor(address: string | WebSocket, options:SocketOptions) {
+    constructor(address: string | ws.connection, options:SocketOptions) {
         super()
         this.options = options
         this.connect = this.connect.bind(this)
@@ -53,7 +54,7 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
             return // The socket was already closed, abort
 
         this.routingIdReceived = false
-        const client = new WebSocketClient({ })
+        const client = new ws.client({ })
 
         client.on('connect', connection => {
             this.socket = connection
