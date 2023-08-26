@@ -1,7 +1,6 @@
 import Router from './router.js'
 import {IEndpoint, Msg} from './types.js'
 import {Buffer} from "buffer"
-import setAsap from 'setasap'
 
 type PendingMsg = [IEndpoint, Buffer[]]
 
@@ -32,7 +31,7 @@ export default class Rep extends Router {
         // We are ready to handle next message
         const nextMsg = this.pending.shift()
         if (nextMsg)
-            setAsap(() => this.recvInternal(nextMsg[0], nextMsg[1]))
+            setImmediate(() => this.recvInternal(nextMsg[0], nextMsg[1]))
         else
             this.sendingReply = false
     }
