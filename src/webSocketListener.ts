@@ -1,4 +1,4 @@
-import { server as WebSocketServer, connection as WebSocket, request as WebSocketRequest } from 'websocket'
+import ws from 'websocket';
 import * as url from 'url'
 import {toNumber} from 'lodash-es'
 import { EventEmitter } from 'events'
@@ -11,13 +11,13 @@ import {IListener} from './types.js'
 type HttpServer = http.Server | https.Server
 
 class HttpServerListener {
-    servers = new Map<string, WebSocketServer>()
+    servers = new Map<string, ws.server>()
 
     constructor(private server:HttpServer) {
 
     }
 
-    add(path:string, wsServer: WebSocketServer) {
+    add(path:string, wsServer: ws.server) {
         this.servers.set(path, wsServer)
     }
 
@@ -44,7 +44,7 @@ function getHttpServerListener(httpServer:HttpServer) {
 }
 
 export default class WebSocketListener extends EventEmitter implements IListener {
-    server:WebSocketServer
+    server:ws.server
     path:string|undefined
     
     private ownHttpServer?: HttpServer
@@ -78,7 +78,7 @@ export default class WebSocketListener extends EventEmitter implements IListener
             this.ownHttpServer = httpServer
         }
         
-        this.server = new WebSocketServer()
+        this.server = new ws.server()
         const listener = getHttpServerListener(httpServer)
         this.path = addrUrl.pathname!
         listener.add(addrUrl.pathname!, this.server)
@@ -90,7 +90,7 @@ export default class WebSocketListener extends EventEmitter implements IListener
         }
     }
 
-    onConnection(connection:WebSocket) {
+    onConnection(connection:ws.connection) {
         const endpoint = new Endpoint(connection, this.options)
         this.emit('attach', endpoint)
     }
