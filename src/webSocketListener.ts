@@ -1,4 +1,4 @@
-import * as WebSocket from 'isomorphic-ws'
+import { server as WebSocketServer, connection as WebSocket, request as WebSocketRequest } from 'websocket'
 import {URL} from 'url'
 import {toNumber} from 'lodash'
 import { EventEmitter } from 'events'
@@ -6,41 +6,18 @@ import SocketOptions from './socketOptions'
 import Endpoint from './webSocketEndpoint'
 import * as http from 'http'
 import * as https from 'https'
-import * as net from "net"
-import * as url from 'url'
 import {IListener} from './types'
 
 type HttpServer = http.Server | https.Server
 
 class HttpServerListener {
-    servers = new Map<string, WebSocket.Server>()
+    servers = new Map<string, WebSocketServer>()
 
     constructor(private server:HttpServer) {
-        server.on('upgrade', this.onUpgrade.bind(this))
+
     }
 
-    onUpgrade(request:http.IncomingMessage, socket: net.Socket, head: Buffer) {
-        let wsServer: WebSocket.Server
-
-        if (request.url) {
-            const path = url.parse(request.url).pathname
-
-            if (path) {
-                const wsServer = this.servers.get(path)
-
-                if (wsServer) {
-                    wsServer.handleUpgrade(request, socket, head, function done(ws) {
-                        wsServer.emit('connection', ws, request)
-                    })
-                    return
-                }
-            }
-        }
-
-        socket.destroy()
-    }
-
-    add(path:string, wsServer: WebSocket.Server) {
+    add(path:string, wsServer: WebSocketServer) {
         this.servers.set(path, wsServer)
     }
 
@@ -67,15 +44,14 @@ function getHttpServerListener(httpServer:HttpServer) {
 }
 
 export default class WebSocketListener extends EventEmitter implements IListener {
-    server:WebSocket.Server
+    server:WebSocketServer
     path:string|undefined
+    
+    private ownHttpServer?: HttpServer
 
     constructor(public address:string, private httpServer: HttpServer | undefined, private options:SocketOptions) {
         super()
         this.onConnection = this.onConnection.bind(this)
-
-        if (!WebSocket.Server)
-            throw 'binding websocket is not supported on browser'
 
         const url = new URL(address)
 
@@ -90,20 +66,21 @@ export default class WebSocketListener extends EventEmitter implements IListener
         else
             throw new Error('not a websocket address')
 
-        if (httpServer) {
-            this.server = new WebSocket.Server({noServer: true})
-            const listener = getHttpServerListener(httpServer)
-            this.path = url.pathname
-            listener.add(url.pathname, this.server)
-        } else {
-            this.server = new WebSocket.Server({
-                port: port,
-                path: url.pathname
-            })
+        if (!httpServer) {
+            httpServer = http.createServer()
+            this.ownHttpServer = httpServer
         }
+        
+        this.server = new WebSocketServer()
+        const listener = getHttpServerListener(httpServer)
+        this.path = url.pathname
+        listener.add(url.pathname, this.server)
+        this.server.on('connect', this.onConnection)
+        this.server.mount({ httpServer, autoAcceptConnections: true })
 
-
-        this.server.on('connection', this.onConnection)
+        if (this.ownHttpServer) {
+            this.ownHttpServer.listen(port, url.hostname)
+        }
     }
 
     onConnection(connection:WebSocket) {
@@ -115,6 +92,8 @@ export default class WebSocketListener extends EventEmitter implements IListener
         if (this.path && this.httpServer)
             getHttpServerListener(this.httpServer).remove(this.path)
 
-        this.server.close()
+        this.server.shutDown()
+        if (this.ownHttpServer)
+            this.ownHttpServer.close(console.error)
     }
 }

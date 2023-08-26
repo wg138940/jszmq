@@ -1,9 +1,10 @@
+import { connection as WebSocket, client as WebSocketClient } from 'websocket'
 import { EventEmitter } from 'events'
-import * as WebSocket from 'isomorphic-ws'
 import {Buffer} from 'buffer'
 import SocketOptions from './socketOptions'
 import {isString} from 'lodash'
 import {IEndpoint, Msg} from './types'
+import { WebSocketState } from './webSocketState'
 
 enum State {
     Closed,
@@ -24,7 +25,7 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
     public routingKeyString = ''
     public address:string
 
-    constructor(address:string|WebSocket, options:SocketOptions) {
+    constructor(address: string | WebSocket, options:SocketOptions) {
         super()
         this.options = options
         this.connect = this.connect.bind(this)
@@ -39,11 +40,10 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
             this.routingIdReceived = false
             this.address = ''
             this.socket = address
-            this.accepted = true
+            this.accepted = true                
             this.state = State.Active
-            this.socket.binaryType = "arraybuffer"
-            this.socket.onclose = this.onClose.bind(this)
-            this.socket.onmessage = this.onMessage.bind(this)
+            this.socket.on('close', this.onClose.bind(this))
+            this.socket.on('message', this.onMessage.bind(this))
             this.send([this.options.routingId])
         }
     }
@@ -53,11 +53,16 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
             return // The socket was already closed, abort
 
         this.routingIdReceived = false
-        this.socket = new WebSocket(this.address, ['ZWS2.0'])
-        this.socket.binaryType = "arraybuffer"
-        this.socket.onopen = this.onOpen.bind(this)
-        this.socket.onclose = this.onClose.bind(this)
-        this.socket.onmessage = this.onMessage.bind(this)
+        const client = new WebSocketClient({ })
+
+        client.on('connect', connection => {
+            this.socket = connection
+            this.socket.on('close', this.onClose.bind(this))
+            this.socket.on('message', this.onMessage.bind(this))
+            this.onOpen()
+        });
+
+        client.connect(this.address, ['ZWS2.0']);
     }
 
     onOpen() {
@@ -102,8 +107,8 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
                 return
         }
 
-        if (message.data instanceof ArrayBuffer) {
-            const buffer = Buffer.from(message.data)
+        if (message.type === 'binary') {
+            const buffer = message.binaryData
 
             if (buffer.length > 0) {
                 const more = buffer.readUInt8(0) === 1
@@ -127,7 +132,7 @@ export default class WebSocketEndpoint extends EventEmitter implements IEndpoint
         if (this.state !== State.Closed) {
             this.state = State.Closed
 
-            if (this.socket.readyState === this.socket.CONNECTING || this.socket.readyState === this.socket.OPEN)
+            if (this.socket.state !== WebSocketState.STATE_CLOSED)
                 this.socket.close()
 
             this.emit('terminated', this)
