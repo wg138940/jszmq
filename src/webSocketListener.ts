@@ -1,7 +1,6 @@
 import { server as WebSocketServer, connection as WebSocket, request as WebSocketRequest } from 'websocket'
 import {URL} from 'url'
-import _ from 'lodash'
-const {toNumber} = _;
+import {toNumber} from 'lodash-es'
 import { EventEmitter } from 'events'
 import SocketOptions from './socketOptions.js'
 import Endpoint from './webSocketEndpoint.js'

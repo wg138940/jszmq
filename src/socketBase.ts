@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events'
 import SocketOptions from './socketOptions.js'
-import _ from 'lodash'
-const {find, pull} = _;
+import {find, pull} from 'lodash-es'
 import {Frame, IEndpoint, IListener, Msg} from './types.js'
 import WebSocketListener from './webSocketListener.js'
 import * as http from 'http'

@@ -1,6 +1,5 @@
 import {Buffer} from 'buffer'
-import _ from 'lodash'
-const {isString} = _
+import {isString} from 'lodash-es'
 import XSub from './xsub.js'
 import {Frame, Msg} from './types.js'
 

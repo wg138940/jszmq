@@ -1,5 +1,4 @@
-import _ from 'lodash'
-const {pull} = _
+import {pull} from 'lodash-es'
 import {IEndpoint, Msg} from '../types.js'
 
 function swap<T>(items: Array<T>, index1: number, index2: number) {

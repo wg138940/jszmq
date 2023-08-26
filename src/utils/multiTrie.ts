@@ -1,8 +1,7 @@
 import { assert } from './assert.js'
 import {IEndpoint} from '../types.js'
 import {Buffer} from 'buffer'
-import _ from 'lodash'
-const {isUndefined} = _
+import {isUndefined} from 'lodash-es'
 import {copy, resize} from './array.js'
 
 type RemovedCallback = (endpoint:IEndpoint, buffer:Buffer, bufferSize:number) => void

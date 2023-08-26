@@ -2,8 +2,7 @@ import ws from 'websocket'
 import { EventEmitter } from 'events'
 import {Buffer} from 'buffer'
 import SocketOptions from './socketOptions.js'
-import _ from 'lodash'
-const {isString} = _;
+import {isString} from 'lodash-es'
 import {IEndpoint, Msg} from './types.js'
 import { WebSocketState } from './webSocketState.js'
 
