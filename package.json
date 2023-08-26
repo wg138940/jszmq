@@ -4,13 +4,12 @@
   "description": "Port of zeromq to Javascript over Web Socket transport",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "private": true,
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "clear": "rm -rf lib/ dist/ coverage/ .nyc_output/",
-    "clear:all": "rm -rf node_modules/ npm-debug.log && npm run clear",
+    "clear": "rimraf lib/ dist/ coverage/ .nyc_output/",
+    "clear:all": "rimraf node_modules/ npm-debug.log && npm run clear",
     "build:test": "npm run clear && tsc -p tsconfig-test.json",
     "test": "npm run build:test && jasmine --reporter=jasmine-console-reporter --config=jasmine.json"
   },
@@ -41,6 +40,7 @@
     "@types/websocket": "^1.0.6",
     "jasmine": "^5.1.0",
     "jasmine-console-reporter": "^3.1.0",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
