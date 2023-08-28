@@ -8,6 +8,18 @@ npm install https://github.com/wg138940/jszmq
 
 Please note that this version has not been published to npm and may require additional steps or considerations during installation and usage.
 
+### Known issue:
+Importing individual exported objects causes silent errors (This should be an easy fix). Please use the `import * as jszmq from 'jszmq'` syntax to import all of the exported objects. 
+```typescript
+// Fails
+import { Rep, Req } from 'jszmq';
+/* ... */
+
+// OK
+import * as jszmq from 'jszmq';
+/* ... */
+```
+
 jszmq
 ======
 
