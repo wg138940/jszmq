@@ -1,3 +1,13 @@
+To install (from the GitHub repository), please use the following command: 
+
+```
+# for webscket dep
+npm install https://github.com/wg138940/WebSocket-Node
+npm install https://github.com/wg138940/jszmq
+```
+
+Please note that this version has not been published to npm and may require additional steps or considerations during installation and usage.
+
 jszmq
 ======
 
